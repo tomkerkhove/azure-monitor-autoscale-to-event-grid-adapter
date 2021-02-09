@@ -2,7 +2,7 @@
 
 Bring Azure Monitor Autoscale events to Azure Event Grid with this adapter.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftomkerkhove%2Fazure-monitor-autoscale-to-event-grid-adapter%2Fprovide-template%2Fdeploy%2Fazuredeploy.json%3Ftoken%3DABBE6P7H5UGZSWVS67TSABTAFQL46)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftomkerkhove%2Fazure-monitor-autoscale-to-event-grid-adapter%2Fmain%2Fdeploy%2Fazuredeploy.json%3Ftoken%3DABBE6P7H5UGZSWVS67TSABTAFQL46)
 
 ## Supported Events
 
@@ -13,7 +13,9 @@ Bring Azure Monitor Autoscale events to Azure Event Grid with this adapter.
 
 **Event Type:** `Azure.Monitor.Autoscale.ScaleIn.Activated`
 
-**Payload:**
+<details>
+<summary><b>Payload</b></summary>
+
 ```json
 {
     "specversion": "1.0",
@@ -45,11 +47,15 @@ Bring Azure Monitor Autoscale events to Azure Event Grid with this adapter.
 }
 ```
 
+</details>
+
 ### Scale Out Activated
 
 **Event Type:** `Azure.Monitor.Autoscale.ScaleOut.Activated`
 
-**Payload:**
+<details>
+<summary><b>Payload</b></summary>
+
 ```json
 {
     "specversion": "1.0",
@@ -80,3 +86,5 @@ Bring Azure Monitor Autoscale events to Azure Event Grid with this adapter.
     }
 }
 ```
+
+</details>
