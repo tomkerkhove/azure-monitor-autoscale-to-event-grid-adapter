@@ -4,6 +4,8 @@ Bring Azure Monitor Autoscale events to Azure Event Grid with this adapter.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Ftomkerkhove%2Fazure-monitor-autoscale-to-event-grid-adapter%2Fmain%2Fdeploy%2Fazuredeploy.json%3Ftoken%3DABBE6P7H5UGZSWVS67TSABTAFQL46)
 
+![Overview](./media/overview.png)
+
 ## Supported Events
 
 - Scale In Activated
