@@ -1,0 +1,21 @@
+{
+	"version": "1.0",
+	"status": "Activated",
+	"operation": "Scale In",
+	"context": {
+		"timestamp": "2021-02-09T08:59:09.9622398Z",
+		"id": "/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourceGroups/promitor-sources/providers/microsoft.insights/autoscalesettings/autoscale-promitor-app-plan",
+		"name": "autoscale-promitor-app-plan",
+		"details": "Autoscale successfully started scale operation for resource 'promitor-app-plan' from capacity '2' to capacity '1'",
+		"subscriptionId": "0f9d7fea-99e8-4768-8672-06a28514f77e",
+		"resourceGroupName": "promitor-sources",
+		"resourceName": "promitor-app-plan",
+		"resourceType": "microsoft.web/serverfarms",
+		"resourceId": "/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourceGroups/promitor-sources/providers/Microsoft.Web/serverFarms/promitor-app-plan",
+		"portalLink": "https://portal.azure.com/#resource/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourceGroups/promitor-sources/providers/Microsoft.Web/serverFarms/promitor-app-plan",
+		"resourceRegion": "West Europe",
+		"oldCapacity": "2",
+		"newCapacity": "1"
+	},
+	"properties": {}
+}
