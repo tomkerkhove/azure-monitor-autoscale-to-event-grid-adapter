@@ -1,0 +1,290 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApps.Name": {
+            "type": "String"
+        },
+        "EventGrid.Uri": {
+            "type": "String"
+        },
+        "EventGrid.Auth.Key":{
+            "type": "securestring"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('LogicApps.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "EventGrid.Auth.Key": {
+                            "defaultValue": "[parameters('EventGrid.Auth.Key')]",
+                            "type": "SecureString"
+                        },
+                        "EventGrid.TopicUri": {
+                            "defaultValue": "[parameters('EventGrid.Uri')]",
+                            "type": "String"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "properties": {
+                                        "context": {
+                                            "properties": {
+                                                "details": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "newCapacity": {
+                                                    "type": "string"
+                                                },
+                                                "oldCapacity": {
+                                                    "type": "string"
+                                                },
+                                                "portalLink": {
+                                                    "type": "string"
+                                                },
+                                                "resourceGroupName": {
+                                                    "type": "string"
+                                                },
+                                                "resourceId": {
+                                                    "type": "string"
+                                                },
+                                                "resourceName": {
+                                                    "type": "string"
+                                                },
+                                                "resourceRegion": {
+                                                    "type": "string"
+                                                },
+                                                "resourceType": {
+                                                    "type": "string"
+                                                },
+                                                "subscriptionId": {
+                                                    "type": "string"
+                                                },
+                                                "timestamp": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "operation": {
+                                            "type": "string"
+                                        },
+                                        "properties": {
+                                            "properties": {},
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Condition": {
+                            "actions": {
+                                "Return_Not_Implemented_Response": {
+                                    "runAfter": {},
+                                    "type": "Response",
+                                    "kind": "Http",
+                                    "inputs": {
+                                        "body": {
+                                            "message": "Status '@{triggerBody()?['status']}' is not implemented yet"
+                                        },
+                                        "statusCode": 501
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_event_type_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "not": {
+                                            "equals": [
+                                                "@triggerBody()?['status']",
+                                                "Activated"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Determine_Event_Type": {
+                            "actions": {
+                                "Set_Event_Type_to_Azure.Monitor.Autoscale.ScaleIn.Activated": {
+                                    "runAfter": {},
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                        "name": "Event.Type",
+                                        "value": "Azure.Monitor.Autoscale.ScaleIn.Activated"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Condition": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "Set_Event_Type_to_Azure.Monitor.Autoscale.ScaleOut.Activated": {
+                                        "runAfter": {},
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                            "name": "Event.Type",
+                                            "value": "Azure.Monitor.Autoscale.ScaleOut.Activated"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@triggerBody()?['operation']",
+                                            "Scale In"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Forward_CloudEvent_to_Azure_Event_Grid_Topic": {
+                            "runAfter": {
+                                "Initialize_event_id_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "body": {
+                                    "capacity": {
+                                        "new": "@triggerBody()?['context']?['newCapacity']",
+                                        "old": "@triggerBody()?['context']?['oldCapacity']"
+                                    },
+                                    "details": "@{triggerBody()?['context']?['details']}",
+                                    "name": "@{triggerBody()?['context']?['name']}",
+                                    "scaleTarget": {
+                                        "resource": {
+                                            "id": "@{triggerBody()?['context']?['resourceId']}",
+                                            "name": "@{triggerBody()?['context']?['resourceName']}",
+                                            "portalLink": "@{triggerBody()?['context']?['portalLink']}",
+                                            "region": "@{triggerBody()?['context']?['resourceRegion']}",
+                                            "type": "@{triggerBody()?['context']?['resourceType']}"
+                                        },
+                                        "resourceGroupName": "@{triggerBody()?['context']?['resourceGroupName']}",
+                                        "subscriptionId": "@{triggerBody()?['context']?['subscriptionId']}"
+                                    }
+                                },
+                                "headers": {
+                                    "aeg-sas-key": "@parameters('EventGrid.Auth.Key')",
+                                    "ce-datacontenttype": "application/json",
+                                    "ce-id": "@variables('Event.Id')",
+                                    "ce-source": "[parameters('LogicApps.Name')]",
+                                    "ce-specversion": "1.0",
+                                    "ce-subject": "@triggerBody()?['context']?['id']",
+                                    "ce-time": "@triggerBody()?['context']?['timestamp']",
+                                    "ce-type": "@variables('Event.Type')"
+                                },
+                                "method": "POST",
+                                "uri": "@{parameters('EventGrid.TopicUri')}?overload=cloudEvent&api-version=2018-01-01"
+                            }
+                        },
+                        "Initialize_event_id_variable": {
+                            "runAfter": {
+                                "Determine_Event_Type": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Event.Id",
+                                        "type": "string",
+                                        "value": "@{workflow().run.name}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_event_type_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Event.Type",
+                                        "type": "string",
+                                        "value": "Azure.Monitor.Autoscale.ScaleIn.Activated"
+                                    }
+                                ]
+                            }
+                        },
+                        "Return_Internal_Server_Error": {
+                            "runAfter": {
+                                "Forward_CloudEvent_to_Azure_Event_Grid_Topic": [
+                                    "Failed",
+                                    "TimedOut"
+                                ]
+                            },
+                            "type": "Response",
+                            "kind": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "X-Event-Id": "@variables('Event.Id')"
+                                },
+                                "statusCode": 500
+                            }
+                        },
+                        "Return_OK": {
+                            "runAfter": {
+                                "Forward_CloudEvent_to_Azure_Event_Grid_Topic": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Response",
+                            "kind": "Http",
+                            "inputs": {
+                                "headers": {
+                                    "X-Event-Id": "@variables('Event.Id')"
+                                },
+                                "statusCode": 200
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        }
+    ]
+}
