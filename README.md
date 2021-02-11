@@ -34,6 +34,10 @@ An Azure Logic Apps workflow is used to receive the webhooks, interpret them and
     "data": {
         "name": "{autoscale-rule-name}",
         "details": "Autoscale successfully started scale operation for resource '{resource-name}' from capacity '2' to capacity '1'",
+        "metadata": {
+            "tenant": "Contoso",
+            "region": "Europe"
+        },
         "capacity": {
             "new": 1,
             "old": 2
@@ -74,6 +78,10 @@ An Azure Logic Apps workflow is used to receive the webhooks, interpret them and
     "data": {
         "name": "{autoscale-rule-name}",
         "details": "Autoscale successfully started scale operation for resource '{resource-name}' from capacity '1' to capacity '2'",
+        "metadata": {
+            "tenant": "Contoso",
+            "region": "Europe"
+        },
         "capacity": {
             "new": 2,
             "old": 1

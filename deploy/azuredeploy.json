@@ -192,6 +192,7 @@
                                         "old": "@triggerBody()?['context']?['oldCapacity']"
                                     },
                                     "details": "@{triggerBody()?['context']?['details']}",
+                                    "metadata": "@triggerBody()?['properties']",
                                     "name": "@{triggerBody()?['context']?['name']}",
                                     "scaleTarget": {
                                         "resource": {
