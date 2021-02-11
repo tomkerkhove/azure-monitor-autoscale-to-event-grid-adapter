@@ -18,7 +18,7 @@
 		"newCapacity": "2"
 	},
 	"properties": {
-		"optional_key1": "optional_value1",
-		"optional_key2": "optional_value2"
+		"tenant": "Contoso",
+		"region": "Europe"
 	}
 }
