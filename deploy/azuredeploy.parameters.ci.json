@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApps.Name": {
+            "value": "azure-monitor-autoscale-to-event-grid-adapter"
+        },
+        "EventGrid.Uri": {
+            "value": "https://azure-monitor-autoscale-to-event-grid-adapter.westeurope-1.eventgrid.azure.net/api/events"
+        },
+        "EventGrid.Auth.Key": {
+            "value": "<key>"
+        }
+    }
+}
